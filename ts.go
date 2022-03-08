@@ -20,30 +20,30 @@ type onlineClient struct {
 }
 
 type serverInfo struct {
-	ClientsOnline    int    `json:"clients_online"`
-	HostButtonGFXURL string `json:"host_button_gfxurl"`
-	HostButtonURL    string `json:"host_button_url"`
-	MaxClients       int    `json:"max_clients"`
-	Name             string `json:"name"`
-	Port             int    `json:"port"`
-	Status           string `json:"status"`
-	Uptime           int    `json:"uptime"`
-	Version          string `json:"version"`
-	WelcomeMessage   string `json:"welcome_message"`
+	ClientsOnline      int    `json:"clients_online"`
+	QueryClientsOnline int    `json:"query_clients_online"`
+	MaxClients         int    `json:"max_clients"`
+	ChannelsOnline     int    `json:"total_channels"`
+	Name               string `json:"name"`
+	Port               int    `json:"port"`
+	Status             string `json:"status"`
+	Uptime             int    `json:"uptime"`
+	Version            string `json:"version"`
+	Platform           string `json:"platform"`
 }
 
 func serverInfoFromServer(s *ts3.Server) serverInfo {
 	return serverInfo{
-		ClientsOnline:    s.ClientsOnline,
-		HostButtonGFXURL: s.HostButtonGFXURL,
-		HostButtonURL:    s.HostButtonURL,
-		MaxClients:       s.MaxClients,
-		Name:             s.Name,
-		Port:             s.Port,
-		Status:           s.Status,
-		Uptime:           s.Uptime,
-		Version:          s.Version,
-		WelcomeMessage:   s.WelcomeMessage,
+		ClientsOnline:      s.ClientsOnline,
+		QueryClientsOnline: s.QueryClientsOnline,
+		MaxClients:         s.MaxClients,
+		ChannelsOnline:     s.ChannelsOnline,
+		Name:               s.Name,
+		Port:               s.Port,
+		Status:             s.Status,
+		Uptime:             s.Uptime,
+		Version:            s.Version,
+		Platform:           s.Platform,
 	}
 }
 
@@ -111,7 +111,9 @@ func getServerStats() (*serverStats, error) {
 			}
 		}
 
-		s.Channels = append(s.Channels, ch)
+		if ch.Clients != nil {
+			s.Channels = append(s.Channels, ch)
+		}
 	}
 
 	return s, nil
