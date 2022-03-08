@@ -1,9 +1,3 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/Luzifer/tsstatus)](https://goreportcard.com/report/github.com/Luzifer/tsstatus)
-![](https://badges.fyi/github/license/Luzifer/tsstatus)
-![](https://badges.fyi/github/downloads/Luzifer/tsstatus)
-![](https://badges.fyi/github/latest-release/Luzifer/tsstatus)
-![](https://knut.in/project-status/tsstatus)
-
 # Luzifer / tsstatus
 
 `tsstatus` is a small utility to expose a status of a TeamSpeak3 server.
@@ -16,49 +10,50 @@ This can be used to have a monitoring for the server (HTTP 200 vs. HTTP 500) and
   "info": {
     "server": {
       "clients_online": 2,
-      "host_button_gfxurl": "https://knut.cc/permanent/1a79a0/luzifer_220px.svg.png",
-      "host_button_url": "https://luzifer.io/",
-      "max_clients": 32,
-      "name": "TS @ luzifer.io",
+      "query_clients_online": 1,
+      "max_clients": 512,
+      "total_channels": 37,
+      "name": "EchtkPvL.de",
       "port": 9987,
       "status": "online",
-      "uptime": 8219,
-      "version": "3.10.2 [Build: 1574239171]",
-      "welcome_message": "Welcome to TeamSpeak on luzifer.io!"
+      "uptime": 18704453,
+      "version": "3.13.6 [Build: 1623234157]",
+      "platform": "Linux"
     },
-    "channels": [
-      {
-        "id": 1,
-        "name": "Lobby",
-        "clients": [
-          {
+    "channels": [{
+        "id": 1074,
+        "name": "Eingangshalle",
+        "clients": [{
             "away": false,
             "away_message": "",
-            "nickname": "Luzifer"
+            "nickname": "EchtkPvL"
           }
         ]
-      },
-      {
-        "id": 2,
-        "name": "Game I",
-        "clients": null
-      },
-      {
-        "id": 3,
-        "name": "Game II",
-        "clients": null
-      },
-      {
-        "id": 4,
-        "name": "Game III",
-        "clients": null
-      },
-      {
-        "id": 9,
-        "name": "AFK",
-        "clients": null
       }
     ]
   }
 }
 ```
+
+In case of failure
+
+```console
+# curl -sSf http://localhost:3000/status | jq .
+{
+  "error": "Unable to create client: dial tcp 127.0.0.1:10011: connect: connection refused"
+}
+```
+
+## Run
+
+### Clone
+`git clone git@github.com:EchtkPvL/tsstatus.git && cd tsstatus/`
+
+### Build
+`docker build -t tsstatus .`
+
+### Run once
+`docker run -p 3000:3000 tsstatus --query-user queryuser --query-pass PASSW0RD --server-address tsserver.tld --server-id 1`
+
+### Run daemonized
+`docker run -d -p 3000:3000 --restart unless-stopped --name tsstatus tsstatus --query-user queryuser --query-pass PASSW0RD --server-address tsserver.tld --server-id 1`
